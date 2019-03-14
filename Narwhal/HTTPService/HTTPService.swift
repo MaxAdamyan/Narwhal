@@ -9,11 +9,14 @@ import Foundation
 import Alamofire
 import ObjectMapper
 
-public protocol RequestProgressProvider {
+public protocol HTTPServiceRequest {
     func progress(_ closure: @escaping (Progress) -> Void)
+    func suspend()
+    func resume()
+    func cancel()
 }
 
-extension DataRequest: RequestProgressProvider {
+extension DataRequest: HTTPServiceRequest {
     public func progress(_ closure: @escaping (Progress) -> Void) {
         downloadProgress(closure: closure)
     }
@@ -74,7 +77,8 @@ open class HTTPService {
             url  = base + endpoint
         }
         
-        let encoding: ParameterEncoding = (method == .get ? URLEncoding(arrayEncoding: .noBrackets) : JSONEncoding.default)
+        let encoding: ParameterEncoding = (method == .get || method == .delete ?
+            URLEncoding(arrayEncoding: .noBrackets) : JSONEncoding.default)
         
         return Alamofire.request(url, method: method, parameters: params, encoding: encoding, headers: allHeaders)
             .validate() //For more flexibilite one can write custome validator
@@ -176,7 +180,7 @@ open class HTTPService {
     func request<T: Mappable, E: Mappable>(endpoint: String, method: HTTPMethod = .get,
                                            params: [String: Any]? = nil, headers: [String: String] = [:],
                                            valueKeyPath: String? = nil, errorKeyPath: String? = nil,
-                                           callback: @escaping ErrorCallback<T, E>) -> RequestProgressProvider {
+                                           callback: @escaping ErrorCallback<T, E>) -> HTTPServiceRequest {
         
         let request = dataRequest(endpoint: endpoint, method: method, params: params, headers: headers)
         { (response) in
@@ -193,7 +197,7 @@ open class HTTPService {
     func requestArray<T: Mappable, E: Mappable>(endpoint: String, method: HTTPMethod = .get,
                                                 params: [String: Any]? = nil, headers: [String: String] = [:],
                                                 valueKeyPath: String? = nil, errorKeyPath: String? = nil,
-                                                callback: @escaping ArrayErrorCallback<T, E>) -> RequestProgressProvider {
+                                                callback: @escaping ArrayErrorCallback<T, E>) -> HTTPServiceRequest {
         
         let request = dataRequest(endpoint: endpoint, method: method, params: params, headers: headers)
         { (response) in
