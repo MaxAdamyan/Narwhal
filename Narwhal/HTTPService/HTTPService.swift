@@ -108,8 +108,8 @@ open class HTTPService {
         }
         
         func errorBody(fromJSON json: [String: Any]?) -> [String: Any]? {
-            guard let errorKeyPath = errorKeyPath,
-                let json = json else { return nil }
+            guard let errorKeyPath = errorKeyPath, errorKeyPath != "",
+            let json = json else { return nil }
             
             return (json as AnyObject).value(forKeyPath: errorKeyPath) as? [String : Any]
         }
@@ -134,7 +134,7 @@ open class HTTPService {
                 return nil
             }
             
-            if let keyPath = valueKeyPath {
+            if let keyPath = valueKeyPath, keyPath != "" {
                 return (json as AnyObject).value(forKeyPath: keyPath)
             }
             
