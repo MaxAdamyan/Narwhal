@@ -10,7 +10,7 @@
 		025D51A4222926360005F4C5 /* HTTPService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 027E43A822282AFF007BF3F1 /* HTTPService.swift */; };
 		025D51A72229268C0005F4C5 /* Pods_Narwhal.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 025D51A62229268C0005F4C5 /* Pods_Narwhal.framework */; };
 		0262AB49222D1D9900C7CFBD /* Dictionary+Mappable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0262AB48222D1D9900C7CFBD /* Dictionary+Mappable.swift */; };
-		027149B822294DF300D74EE6 /* Empty.swift in Sources */ = {isa = PBXBuildFile; fileRef = 027149B722294DF300D74EE6 /* Empty.swift */; };
+		027149B822294DF300D74EE6 /* Never+Mappable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 027149B722294DF300D74EE6 /* Never+Mappable.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -18,7 +18,7 @@
 		025D51A62229268C0005F4C5 /* Pods_Narwhal.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Pods_Narwhal.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		0262AB47222D14B700C7CFBD /* Narwhal.podspec */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; path = Narwhal.podspec; sourceTree = "<group>"; };
 		0262AB48222D1D9900C7CFBD /* Dictionary+Mappable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Dictionary+Mappable.swift"; sourceTree = "<group>"; };
-		027149B722294DF300D74EE6 /* Empty.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Empty.swift; sourceTree = "<group>"; };
+		027149B722294DF300D74EE6 /* Never+Mappable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Never+Mappable.swift"; sourceTree = "<group>"; };
 		027E43A222282A96007BF3F1 /* Narwhal.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Narwhal.h; sourceTree = "<group>"; };
 		027E43A322282A96007BF3F1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		027E43A822282AFF007BF3F1 /* HTTPService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPService.swift; sourceTree = "<group>"; };
@@ -44,7 +44,7 @@
 			isa = PBXGroup;
 			children = (
 				027E43A822282AFF007BF3F1 /* HTTPService.swift */,
-				027149B722294DF300D74EE6 /* Empty.swift */,
+				027149B722294DF300D74EE6 /* Never+Mappable.swift */,
 				0262AB48222D1D9900C7CFBD /* Dictionary+Mappable.swift */,
 			);
 			path = HTTPService;
@@ -203,7 +203,7 @@
 			files = (
 				0262AB49222D1D9900C7CFBD /* Dictionary+Mappable.swift in Sources */,
 				025D51A4222926360005F4C5 /* HTTPService.swift in Sources */,
-				027149B822294DF300D74EE6 /* Empty.swift in Sources */,
+				027149B822294DF300D74EE6 /* Never+Mappable.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

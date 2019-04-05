@@ -7,7 +7,7 @@ Pod::Spec.new do |rs|
   rs.license          = { :type => 'Copyright', :text => 'Copyright gg CJCS 2019' }
   rs.author           = { 'max' => 'max@team.gg' }
   rs.source           = { :git => 'https://mirana.visualstudio.com/gg/_git/iOS.Narwhal',
-                          :tag => rs.version.to_s }
+                          :branch => 'master' }
 
   rs.platform         = :ios, '9.0'
   rs.swift_version    = '4.2'

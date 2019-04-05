@@ -46,8 +46,8 @@ open class HTTPService {
         public var response: HTTPURLResponse?
     }
     
-    public typealias EmptyCallback = (Response<Empty, [String: Any]>) -> Void
-    public typealias EmptyErrorCallback<E: Mappable> = (Response<Empty, E>) -> Void
+    public typealias EmptyCallback = (Response<Never, [String: Any]>) -> Void
+    public typealias EmptyErrorCallback<E: Mappable> = (Response<Never, E>) -> Void
     public typealias Callback<T: Mappable> = (Response<T, [String: Any]>) -> Void
     public typealias ErrorCallback<T: Mappable, E: Mappable> = (Response<T, E>) -> Void
     public typealias ArrayCallback<T: Mappable> = (Response<[T], [String: Any]>) -> Void
