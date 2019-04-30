@@ -22,7 +22,13 @@ extension DataRequest: HTTPServiceRequest {
     }
 }
 
-open class HTTPService {
+public protocol HTTPServiceAuthManager: class {
+    var authHeaders: [String: String] { get }
+    func refreshToken(for request: URLRequest?, response:  HTTPURLResponse?,
+                      completion: @escaping (_ shouldRetry: Bool, _ timeDelay: TimeInterval) -> ())
+}
+
+open class HTTPService: RequestAdapter, RequestRetrier {
     public enum RequestError: Error {
         case seralizationFailed
         case middlewareValidation
@@ -61,16 +67,37 @@ open class HTTPService {
     open var valueKeyPath: String? { return nil }
     open var responseMiddlewares: [(MiddlewareResponse) -> MiddlewareResult] { return [] }
     
+    open weak var authManager: HTTPServiceAuthManager?
+    
     public init() {}
+    
+    lazy private var sessionManager: SessionManager = {
+        let manager = SessionManager()
+        manager.adapter = self
+        manager.retrier = self
+        return manager
+    }()
+    
+    public func adapt(_ urlRequest: URLRequest) throws -> URLRequest {
+        var request = urlRequest
+        let headers = request.allHTTPHeaderFields ?? [:]
+        request.allHTTPHeaderFields = [:]
+        
+        var allHeaders = additionalHeaders(for: request.url?.absoluteString ?? "")
+        for (key, value) in authManager?.authHeaders ?? [:] {
+            allHeaders.updateValue(value, forKey: key)
+        }
+        for (key, value) in headers {
+            allHeaders.updateValue(value, forKey: key)
+        }
+        
+        request.allHTTPHeaderFields = allHeaders
+        return request
+    }
     
     private func dataRequest(endpoint: String, method: HTTPMethod,
                              params: [String: Any]?, headers: [String: String] = [:],
                              callback: @escaping (DefaultDataResponse) -> Void) -> DataRequest {
-        
-        var allHeaders = additionalHeaders(for: endpoint)
-        for (key, value) in headers {
-            allHeaders.updateValue(value, forKey: key)
-        }
         
         var url = endpoint
         if let base = baseURL, !endpoint.contains("http") {
@@ -80,8 +107,8 @@ open class HTTPService {
         let encoding: ParameterEncoding = (method == .get || method == .delete ?
             URLEncoding(arrayEncoding: .noBrackets) : JSONEncoding.default)
         
-        return Alamofire.request(url, method: method, parameters: params, encoding: encoding, headers: allHeaders)
-            .validate() //For more flexibilite one can write custome validator
+        return sessionManager.request(url, method: method, parameters: params, encoding: encoding, headers: headers)
+            .validate() //For more flexibilite, one can write custome validator
             .response(completionHandler: {(response) in
                 let middlewareResponse = MiddlewareResponse(body: response.data,
                                                             request: response.request,
@@ -96,6 +123,23 @@ open class HTTPService {
                 }
                 callback(response)
             })
+    }
+    
+    public func should(_ manager: SessionManager, retry request: Request,
+                       with error: Error, completion: @escaping RequestRetryCompletion) {
+        
+        guard let response = request.response, response.statusCode == 401 else {
+            completion(false, 0.0)
+            return
+        }
+        
+        guard let authManager = self.authManager else {
+            completion(false, 0.0)
+            return
+        }
+        
+        authManager.refreshToken(for: request.request, response: response,
+                                 completion: completion)
     }
     
     private class ResponseSerilizer<T: Mappable, E: Mappable> {
