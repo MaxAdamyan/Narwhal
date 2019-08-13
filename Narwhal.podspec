@@ -10,7 +10,7 @@ Pod::Spec.new do |rs|
                           :branch => 'master' }
 
   rs.platform         = :ios, '9.0'
-  rs.swift_version    = '4.2'
+  rs.swift_version    = '5.0'
   
   rs.subspec 'HTTPService' do |s|
   	s.source_files    = 'Narwhal/HTTPService/*'
