@@ -58,6 +58,7 @@ open class HTTPService: RequestAdapter, RequestRetrier {
     public typealias ErrorCallback<T: Mappable, E: Mappable> = (Response<T, E>) -> Void
     public typealias ArrayCallback<T: Mappable> = (Response<[T], [String: Any]>) -> Void
     public typealias ArrayErrorCallback<T: Mappable, E: Mappable> = (Response<[T], E>) -> Void
+    public typealias DataCallback = (Response<Data, Error>) -> Void
     
     //MARK: -
     
@@ -250,6 +251,20 @@ open class HTTPService: RequestAdapter, RequestRetrier {
             
             callback(serilizer.transoform(data: response.data, error: response.error,
                                           httpResponse: response.response))
+        }
+        return request
+    }
+    
+    @discardableResult public
+    func requestData(endpoint: String, method: HTTPMethod = .get,
+                     params: [String: Any]? = nil, headers: [String: String] = [:],
+                     callback: @escaping DataCallback) -> HTTPServiceRequest {
+        let request = dataRequest(endpoint: endpoint, method: method, params: params, headers: headers)
+        { (response) in
+            callback(Response(value: response.data,
+                              error: response.error,
+                              errorBody: nil,
+                              response: response.response))
         }
         return request
     }
